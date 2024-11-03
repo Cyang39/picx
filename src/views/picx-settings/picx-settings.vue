@@ -1,6 +1,6 @@
 <template>
   <div class="page-container settings-page-container">
-    <cloud-settings-bar />
+    <!-- <cloud-settings-bar /> -->
 
     <el-collapse>
       <!-- 图片名称设置 -->

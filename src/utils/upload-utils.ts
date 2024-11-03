@@ -10,6 +10,7 @@ import {
 } from '@/common/api'
 import { PICX_UPLOAD_IMG_DESC } from '@/common/constant'
 import i18n from '@/plugins/vue/i18n'
+import request from '@/utils/request'
 
 /**
  * 图片上传成功之后的处理
@@ -20,9 +21,9 @@ import i18n from '@/plugins/vue/i18n'
 const uploadedHandle = (
   res: { name: string; sha: string; path: string; size: number },
   img: UploadImageModel,
-  userConfigInfo: UserConfigInfoModel
+  userConfigInfo: UserConfigInfoModel | null = null
 ) => {
-  let dir = userConfigInfo.selectedDir
+  let dir = userConfigInfo?.selectedDir || localStorage.getItem('alist-path') || '/'
 
   if (img?.reUploadInfo?.isReUpload) {
     dir = img.reUploadInfo.dir
@@ -190,6 +191,92 @@ export function uploadImageToGitHub(
       const { name, sha, path, size } = uploadRes.content
       uploadedHandle({ name, sha, path, size }, img, userConfigInfo)
       resolve(true)
+    } else {
+      resolve(false)
+    }
+  })
+}
+
+// return a promise that resolves with a File instance
+function urltoFile(url: any, filename: any, mimeType: any = null) {
+  if (url.startsWith('data:')) {
+    const arr = url.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[arr.length - 1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n) {
+      n -= 1
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    const file = new File([u8arr], filename, { type: mime || mimeType })
+    return Promise.resolve(file)
+  }
+  return fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buf) => new File([buf], filename, { type: mimeType }))
+}
+
+export function uploadImageToAlist(img: UploadImageModel): Promise<Boolean> {
+  const alist_config = {
+    server: localStorage.getItem('alist-server'),
+    username: localStorage.getItem('alist-username'),
+    password: localStorage.getItem('alist-password'),
+    path: localStorage.getItem('alist-path')
+  }
+  if (alist_config.path && alist_config.path[alist_config.path.length - 1] !== '/') {
+    alist_config.path += '/'
+  }
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve) => {
+    const file = await urltoFile(
+      img.base64.compressBase64 || img.base64.watermarkBase64 || img.base64.originalBase64,
+      img.filename.final
+    )
+    console.log('file >> ', file)
+    if (file) {
+      const tokenRes = await request({
+        url: `${alist_config.server}/api/auth/login`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          username: alist_config.username,
+          password: alist_config.password
+        }
+      })
+      const { token } = tokenRes.data
+      console.log('token >> ', token)
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await request({
+        url: `${alist_config.server}/api/fs/put`,
+        method: 'PUT',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/octet-stream',
+          'Content-Length': file.size,
+          'File-Path': alist_config.path + img.filename.final,
+          'Ask-Task': 'true'
+        },
+        data: file
+      })
+      console.log('uploadSingleImage >> ', res)
+      if (res) {
+        uploadedHandle(
+          {
+            name: img.filename.final,
+            sha: '',
+            path: alist_config.path + img.filename.final,
+            size: file.size
+          },
+          img
+        )
+        resolve(true)
+      } else {
+        resolve(false)
+      }
     } else {
       resolve(false)
     }

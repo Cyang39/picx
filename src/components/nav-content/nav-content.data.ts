@@ -2,14 +2,14 @@ import { shallowRef } from 'vue'
 import { getUuid } from '@/utils'
 
 export const navInfoList = shallowRef([
-  {
-    uuid: getUuid(),
-    name: 'nav.config',
-    icon: IEpEdit,
-    isActive: false,
-    path: '/config',
-    isShow: true
-  },
+  // {
+  //   uuid: getUuid(),
+  //   name: 'nav.config',
+  //   icon: IEpEdit,
+  //   isActive: false,
+  //   path: '/config',
+  //   isShow: true
+  // },
   {
     uuid: getUuid(),
     name: 'nav.upload',
@@ -18,14 +18,14 @@ export const navInfoList = shallowRef([
     path: '/upload',
     isShow: true
   },
-  {
-    uuid: getUuid(),
-    name: 'nav.management',
-    icon: IEpPicture,
-    isActive: false,
-    path: '/management',
-    isShow: true
-  },
+  // {
+  //   uuid: getUuid(),
+  //   name: 'nav.management',
+  //   icon: IEpPicture,
+  //   isActive: false,
+  //   path: '/management',
+  //   isShow: true
+  // },
   {
     uuid: getUuid(),
     name: 'nav.settings',

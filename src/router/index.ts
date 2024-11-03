@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import login from '@/views/picx-login/picx-login.vue'
+// import login from '@/views/picx-login/picx-login.vue'
 import upload from '@/views/upload-image/upload-image.vue'
 import management from '@/views/imgs-management/imgs-management.vue'
 import settings from '@/views/picx-settings/picx-settings.vue'
@@ -14,9 +14,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'login',
-    component: login,
+    component: upload,
     meta: {
-      title: 'login'
+      title: 'nav.upload'
     }
   },
   {

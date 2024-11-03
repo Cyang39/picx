@@ -17,7 +17,7 @@
             class="nav-menu-item border-box"
             :class="{ active: nav.isActive }"
             @click="onNavClick(nav)"
-            v-show="nav.isShow"
+            v-show="true || nav.isShow"
           >
             <el-icon class="nav-icon" :size="navIconSize">
               <component :is="nav.icon"></component>

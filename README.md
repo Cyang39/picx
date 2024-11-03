@@ -2,6 +2,16 @@
 <img width="100" align="right" alt="PicX" src="https://picx-docs.xpoet.cn/images/logo.png">
 </a>
 
+# Picx-Alist
+
+上传图片到 AList 服务器，方便自己用随便改了下。
+
+使用方法：
+1. 在浏览器 localstorage 中添加 `alist-server`, `alist-username`, `alist-password` 和 `alist-path` 键值对
+2. 直接上传即可，但是只能单张上传，批量自己用不到，所以不管了
+
+<hr>
+
 # PicX
 
 [![Release](https://img.shields.io/github/release/XPoet/picx?style=flat&logo=github)](https://github.com/XPoet/picx/releases)

@@ -16,10 +16,10 @@ axios.interceptors.request.use(
   (config) => {
     const userConfig = getLocal(LS_CONFIG)
     if (userConfig) {
-      const { token } = userConfig
-      if (config.baseURL?.includes(baseURL) && token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
+      // const { token } = userConfig
+      // if (config.baseURL?.includes(baseURL) && token) {
+      //   config.headers.Authorization = `Bearer ${token}`
+      // }
     }
     return config
   },

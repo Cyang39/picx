@@ -15,6 +15,14 @@
       <!-- 选择图片区域 -->
       <div class="row-item">
         <div class="content-box">
+          <p>
+            <a
+              href="https://github.com/Cyang39/picx-alist#picx-alist"
+              style="color: aqua"
+              target="_blank"
+              >使用说明</a
+            >
+          </p>
           <getting-images :disabled="uploading" ref="gettingImagesRef" @getImgList="setImgList" />
         </div>
       </div>
@@ -58,7 +66,7 @@
 <script lang="ts" setup>
 import { computed, watch, ref, Ref, onMounted, getCurrentInstance } from 'vue'
 import { store } from '@/stores'
-import router from '@/router'
+// import router from '@/router'
 import {
   ElementPlusSizeEnum,
   UploadedImageModel,
@@ -67,7 +75,7 @@ import {
 } from '@/common/model'
 import { batchCopyImageLinks, copyImageLink, getOSName } from '@/utils'
 import { generateUploadImageObject } from './upload-image.util'
-import { uploadImagesToGitHub, uploadImageToGitHub } from '@/utils/upload-utils'
+import { uploadImagesToGitHub, uploadImageToAlist } from '@/utils/upload-utils'
 import UploadImageCard from './components/upload-image-card/upload-image-card.vue'
 import SelectedInfoBar from '@/views/upload-image/components/dir-info-bar/dir-info-bar.vue'
 
@@ -77,7 +85,7 @@ const gettingImagesRef: Ref = ref<null | HTMLElement>(null)
 
 const userConfigInfo = computed(() => store.getters.getUserConfigInfo).value
 const globalSettings = computed(() => store.getters.getGlobalSettings).value
-const logoutStatus = computed(() => store.getters.getUserLoginStatus)
+const logoutStatus = true || computed(() => store.getters.getUserLoginStatus)
 
 const uploadImageList = ref<UploadImageModel[]>([])
 const uploading = ref(false)
@@ -101,7 +109,11 @@ const resetGettingImages = () => {
 const doUploadImages = async (imgList: UploadImageModel[]) => {
   // 单张图片
   if (imgList.length === 1) {
-    if (await uploadImageToGitHub(userConfigInfo, imgList[0])) {
+    // if (await uploadImageToGitHub(userConfigInfo, imgList[0])) {
+    //   return UploadStatusEnum.uploaded
+    // }
+    // return UploadStatusEnum.uploadFail
+    if (await uploadImageToAlist(imgList[0])) {
       return UploadStatusEnum.uploaded
     }
     return UploadStatusEnum.uploadFail
@@ -132,6 +144,7 @@ const afterUploadSuccess = async (uploadedImg: UploadedImageModel[], isBatch: bo
 
 // 上传
 const uploadImage = async () => {
+  /**
   const { token, repo, selectedDir } = userConfigInfo
 
   if (!token) {
@@ -151,6 +164,7 @@ const uploadImage = async () => {
     await router.push('/config')
     return
   }
+  */
 
   const notYetUploadList = uploadImageList.value.filter((x) => x.uploadStatus.progress === 0)
 
