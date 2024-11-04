@@ -8,7 +8,8 @@
 
 使用方法：
 1. 在浏览器 localstorage 中添加 `alist-server`, `alist-username`, `alist-password` 和 `alist-path` 键值对
-2. 直接上传即可，但是只能单张上传，批量自己用不到，所以不管了
+2. `alist-path` 记得要 `/` 结尾，没做判断
+3. 直接上传即可，但是只能单张上传，批量自己用不到，所以不管了
 
 <hr>
 
